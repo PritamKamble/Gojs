@@ -20,6 +20,8 @@
     "@angular/platform-browser-dynamic": "~8.2.3",
     "@angular/router": "~8.2.3",
     "gojs": "^2.0.16",
+    "icomoon": "^1.0.0",
+    "icons": "^1.0.0",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"

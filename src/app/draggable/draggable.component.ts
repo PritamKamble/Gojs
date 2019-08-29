@@ -73,6 +73,19 @@ export class DraggableComponent implements OnInit {
           "undoManager.isEnabled": true
         });
 
+    go.Shape.defineFigureGenerator("Chevron", function (shape, w, h) {
+      var geo = new go.Geometry();
+      var fig = new go.PathFigure(0, 0, true);
+      geo.add(fig);
+
+      fig.add(new go.PathSegment(go.PathSegment.Line, .5 * w, 0));
+      fig.add(new go.PathSegment(go.PathSegment.Line, w, .5 * h));
+      fig.add(new go.PathSegment(go.PathSegment.Line, .5 * w, h));
+      fig.add(new go.PathSegment(go.PathSegment.Line, 0, h));
+      fig.add(new go.PathSegment(go.PathSegment.Line, .5 * w, .5 * h).close());
+      return geo;
+    });
+
 
     // when the document is modified, add a "*" to the title and enable the "Save" button
     myDiagram.addDiagramListener("Modified", function (e) {
@@ -266,17 +279,19 @@ export class DraggableComponent implements OnInit {
             { text: "DB", figure: "Database", fill: "lightgray" },
             { text: "???", figure: "Diamond", fill: "lightskyblue" },
             { text: "End", figure: "Circle", fill: "#CE0620" },
-            { text: "Comment", figure: "RoundedRectangle", fill: "lightyellow" },
+            { text: "Comment", figure: "Chevron", fill: "lightyellow" },
             { text: "Comment2", figure: "RoundedRectangle", fill: "lightyellow" },
             { text: "Comment3", figure: "RoundedRectangle", fill: "lightyellow" },
             { text: "Comment4", figure: "RoundedRectangle", fill: "lightyellow" },
-            { text: "Comment5", figure: "RoundedRectangle", fill: "lightyellow" }
+            { text: "Comment5", figure: "RoundedRectangle", fill: "lightyellow" },
+            
           ], [
               // the Palette also has a disconnected Link, which the user can drag-and-drop
               { points: new go.List(/*go.Point*/).addAll([new go.Point(0, 0), new go.Point(30, 0), new go.Point(30, 40), new go.Point(60, 40)]) }
             ])
         });
 
+   
     myDiagram.addModelChangedListener(function (evt) {
       updatedData = myDiagram.model.toJson();
       // console.log(updatedData);
