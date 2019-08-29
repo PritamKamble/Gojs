@@ -1,8 +1,10 @@
 import { Component, OnInit, OnChanges } from '@angular/core';
 import * as go from "gojs";
 import { FormBuilder, FormGroup } from '@angular/forms';
+
 var myDiagram;
 var updatedData;
+
 @Component({
   selector: 'app-draggable',
   templateUrl: './draggable.component.html',
@@ -12,6 +14,7 @@ var updatedData;
 export class DraggableComponent implements OnInit {
 
   myPalette;
+
   data = JSON.stringify({
     "class": "go.GraphLinksModel",
     "linkFromPortIdProperty": "fromPort",
@@ -263,7 +266,11 @@ export class DraggableComponent implements OnInit {
             { text: "DB", figure: "Database", fill: "lightgray" },
             { text: "???", figure: "Diamond", fill: "lightskyblue" },
             { text: "End", figure: "Circle", fill: "#CE0620" },
-            { text: "Comment", figure: "RoundedRectangle", fill: "lightyellow" }
+            { text: "Comment", figure: "RoundedRectangle", fill: "lightyellow" },
+            { text: "Comment2", figure: "RoundedRectangle", fill: "lightyellow" },
+            { text: "Comment3", figure: "RoundedRectangle", fill: "lightyellow" },
+            { text: "Comment4", figure: "RoundedRectangle", fill: "lightyellow" },
+            { text: "Comment5", figure: "RoundedRectangle", fill: "lightyellow" }
           ], [
               // the Palette also has a disconnected Link, which the user can drag-and-drop
               { points: new go.List(/*go.Point*/).addAll([new go.Point(0, 0), new go.Point(30, 0), new go.Point(30, 40), new go.Point(60, 40)]) }
@@ -292,24 +299,13 @@ export class DraggableComponent implements OnInit {
   }
 
   load() {
-
-
-
     if (localStorage.getItem('graphData')) {
       myDiagram.model = go.Model.fromJson(localStorage.getItem('graphData'));
     }
 
     if (event) {
-
-
-      //   // console.log(event.target.parentNode.parentNode.childNodes[1].childNodes[0].value);
-      //   console.log(document.getElementById('mySavedModel').value);
-
-
-      myDiagram.model = go.Model.fromJson(document.getElementById('mySavedModel').value);// event.target.parentNode.parentNode.childNodes[1].childNodes[0].value
+      myDiagram.model = go.Model.fromJson(document.getElementById('mySavedModel').value);
     }
-
-
     this.loadDiagramProperties();  // do this after the Model.modelData has been brought into memory
   }
 
