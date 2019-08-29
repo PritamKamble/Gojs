@@ -9,7 +9,8 @@ var updatedData;
   styleUrls: ['./draggable.component.css']
 })
 
-export class DraggableComponent implements OnInit, OnChanges {
+export class DraggableComponent implements OnInit {
+
   myPalette;
   data = JSON.stringify({
     "class": "go.GraphLinksModel",
@@ -23,15 +24,17 @@ export class DraggableComponent implements OnInit, OnChanges {
   dataForm: FormGroup;
   constructor(private fb: FormBuilder) { }
 
-  refreshData() {
+  onChanged() {
     console.log(this.dataForm.get('drawingData').value);
   }
-  ngOnChanges(changes: import("@angular/core").SimpleChanges): void {
-    console.log('khjkj');
 
-  }
 
   ngOnInit() {
+
+    localStorage.getItem('graphData')
+    if (localStorage.getItem('graphData')) {
+      document.getElementById('mySavedModel')
+    }
 
     this.dataForm = this.fb.group({
       drawingData: [this.data]
@@ -220,7 +223,7 @@ export class DraggableComponent implements OnInit, OnChanges {
         )
       );
 
-    this.load(event);  // load an initial diagram from some JSON text
+    this.load();  // load an initial diagram from some JSON text
 
     // initialize the Palette that is on the left side of the page
     this.myPalette =
@@ -268,13 +271,12 @@ export class DraggableComponent implements OnInit, OnChanges {
         });
 
     myDiagram.addModelChangedListener(function (evt) {
-
-      // console.log(myDiagram.model.toJson());
       updatedData = myDiagram.model.toJson();
-
-
+      // console.log(updatedData);
+      var inputElement = <HTMLInputElement>document.getElementById('mySavedModel');
+      inputElement.value = updatedData;
     });
-    this.data = updatedData;
+
   } // oninit
 
   save() {
@@ -286,22 +288,25 @@ export class DraggableComponent implements OnInit, OnChanges {
       drawingData: updatedData
     });
     myDiagram.isModified = false;
+    localStorage.setItem('graphData', updatedData);
   }
 
-  load(event) {
+  load() {
+
+
+
+    if (localStorage.getItem('graphData')) {
+      myDiagram.model = go.Model.fromJson(localStorage.getItem('graphData'));
+    }
 
     if (event) {
-      myDiagram.model = go.Model.fromJson(event.target.parentNode.parentNode.childNodes[1].value);
-    } else {
-      myDiagram.model = go.Model.fromJson({
-        "class": "go.GraphLinksModel",
-        "linkFromPortIdProperty": "fromPort",
-        "linkToPortIdProperty": "toPort",
-        "nodeDataArray": [
-        ],
-        "linkDataArray": [
-        ]
-      });
+
+
+      //   // console.log(event.target.parentNode.parentNode.childNodes[1].childNodes[0].value);
+      //   console.log(document.getElementById('mySavedModel').value);
+
+
+      myDiagram.model = go.Model.fromJson(document.getElementById('mySavedModel').value);// event.target.parentNode.parentNode.childNodes[1].childNodes[0].value
     }
 
 
