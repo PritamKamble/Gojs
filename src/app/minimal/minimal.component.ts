@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angula
 import * as go from 'gojs';
 
 var myDiagram;
+var myPalette;
 
 @Component({
   selector: 'app-minimal',
@@ -10,10 +11,6 @@ var myDiagram;
 })
 export class MinimalComponent implements AfterViewInit {
 
-  constructor() { }
-
-
-  title = 'Draggable Links';
   @ViewChild('myDiagramDiv', { static: true }) myDiagramDiv;
   @ViewChild('myPaletteDiv', { static: true }) myPaletteDiv;
   @ViewChild('mySavedModel', { static: true }) mySavedModel;
@@ -21,6 +18,99 @@ export class MinimalComponent implements AfterViewInit {
   diagramDiv;
   paletteDiv;
   savedModel;
+
+  constructor() { }
+
+  choices = ['groupOne', 'groupTwo'];
+
+  groupOne = [  // specify the contents of the Palette
+
+    { text: "End", figure: "Circle", fill: "#CE0620" },
+    { text: "Comment", figure: "RoundedRectangle", fill: "lightyellow" },
+    { text: "Comment", figure: "RoundedRectangle", fill: "lightyellow" }
+  ];
+
+  groupTwo = [  // specify the contents of the Palette
+    { text: "Start", figure: "Circle", fill: "#00AD5F" },
+    // { text: "Step" },
+    { text: "DB", figure: "Database", fill: "lightgray" },
+    { text: "???", figure: "Diamond", fill: "lightskyblue" },
+  ];
+
+  choice = this.groupOne;
+
+  groupSelect(value) {
+    const $ = go.GraphObject.make;
+    myPalette.div = null;
+    if (value === 'groupOne') {
+      this.choice = this.groupOne;
+      myPalette = $(go.Palette, this.paletteDiv, {
+        maxSelectionCount: 1,
+        nodeTemplateMap: myDiagram.nodeTemplateMap,  // share the templates used by myDiagram
+        linkTemplate: // simplify the link template, just in this Palette
+          $(go.Link,
+            { // because the GridLayout.alignment is Location and the nodes have locationSpot == Spot.Center,
+              // to line up the Link in the same manner we have to pretend the Link has the same location spot
+              locationSpot: go.Spot.Center,
+              selectionAdornmentTemplate:
+                $(go.Adornment, "Link",
+                  { locationSpot: go.Spot.Center },
+                  $(go.Shape,
+                    { isPanelMain: true, fill: null, stroke: "deepskyblue", strokeWidth: 0 }),
+                  $(go.Shape,  // the arrowhead
+                    { toArrow: "Standard", stroke: null })
+                )
+            },
+            {
+              routing: go.Link.AvoidsNodes,
+              curve: go.Link.JumpOver,
+              corner: 5,
+              toShortLength: 4
+            },
+            new go.Binding("points"),
+            $(go.Shape,  // the link path shape
+              { isPanelMain: true, strokeWidth: 2 }),
+            $(go.Shape,  // the arrowhead
+              { toArrow: "Standard", stroke: null })
+          ), model: new go.GraphLinksModel(this.groupOne, [{ points: new go.List(/*go.Point*/).addAll([new go.Point(0, 0), new go.Point(30, 0), new go.Point(30, 40), new go.Point(60, 40)]) }])
+      });
+    }
+    if (value === 'groupTwo') {
+      this.choice = this.groupTwo;
+      myPalette = go.GraphObject.make(go.Palette, this.paletteDiv, {
+        maxSelectionCount: 1,
+        nodeTemplateMap: myDiagram.nodeTemplateMap,  // share the templates used by myDiagram
+        linkTemplate: // simplify the link template, just in this Palette
+          $(go.Link,
+            { // because the GridLayout.alignment is Location and the nodes have locationSpot == Spot.Center,
+              // to line up the Link in the same manner we have to pretend the Link has the same location spot
+              locationSpot: go.Spot.Center,
+              selectionAdornmentTemplate:
+                $(go.Adornment, "Link",
+                  { locationSpot: go.Spot.Center },
+                  $(go.Shape,
+                    { isPanelMain: true, fill: null, stroke: "deepskyblue", strokeWidth: 0 }),
+                  $(go.Shape,  // the arrowhead
+                    { toArrow: "Standard", stroke: null })
+                )
+            },
+            {
+              routing: go.Link.AvoidsNodes,
+              curve: go.Link.JumpOver,
+              corner: 5,
+              toShortLength: 4
+            },
+            new go.Binding("points"),
+            $(go.Shape,  // the link path shape
+              { isPanelMain: true, strokeWidth: 2 }),
+            $(go.Shape,  // the arrowhead
+              { toArrow: "Standard", stroke: null })
+          ), model: new go.GraphLinksModel(this.groupTwo, [{ points: new go.List(/*go.Point*/).addAll([new go.Point(0, 0), new go.Point(30, 0), new go.Point(30, 40), new go.Point(60, 40)]) }])
+      });
+    }
+  }
+
+  title = 'Draggable Links';
 
 
   ngAfterViewInit() {
@@ -219,7 +309,7 @@ export class MinimalComponent implements AfterViewInit {
 
     // initialize the Palette that is on the left side of the page
 
-    const myPalette =
+    myPalette =
       $(go.Palette, this.paletteDiv,  // must name or refer to the DIV HTML element
         {
           maxSelectionCount: 1,
@@ -250,18 +340,10 @@ export class MinimalComponent implements AfterViewInit {
               $(go.Shape,  // the arrowhead
                 { toArrow: "Standard", stroke: null })
             ),
-          model: new go.GraphLinksModel([  // specify the contents of the Palette
-            { text: "Start", figure: "Circle", fill: "#00AD5F" },
-            { text: "Step" },
-            { text: "DB", figure: "Database", fill: "lightgray" },
-            { text: "???", figure: "Diamond", fill: "lightskyblue" },
-            { text: "End", figure: "Circle", fill: "#CE0620" },
-            { text: "Comment", figure: "RoundedRectangle", fill: "lightyellow" },
-            { text: "Comment", figure: "RoundedRectangle", fill: "lightyellow" }
-          ], [
-              // the Palette also has a disconnected Link, which the user can drag-and-drop
-              { points: new go.List(/*go.Point*/).addAll([new go.Point(0, 0), new go.Point(30, 0), new go.Point(30, 40), new go.Point(60, 40)]) }
-            ])
+          model: new go.GraphLinksModel(this.choice, [
+            // the Palette also has a disconnected Link, which the user can drag-and-drop
+            { points: new go.List(/*go.Point*/).addAll([new go.Point(0, 0), new go.Point(30, 0), new go.Point(30, 40), new go.Point(60, 40)]) }
+          ])
         });
 
     myDiagram.addModelChangedListener(function (evt) {
