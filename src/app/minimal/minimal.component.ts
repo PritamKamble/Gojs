@@ -39,6 +39,34 @@ export class MinimalComponent implements AfterViewInit {
 
   choice = this.groupOne;
 
+  searchWidget(value) {
+    console.log(value);
+  }
+
+  loadDiamond() {
+    var abc = JSON.parse(this.savedModel.value);
+    console.log(abc.nodeDataArray);
+
+    abc.nodeDataArray.push({"text":"???", "figure":"Diamond", "fill":"lightskyblue", "key":-3, "loc":"-1560 -690"});
+    console.log(abc);
+    this.savedModel.value = JSON.stringify(abc);
+    // console.log(this.savedModel.value);
+    this.load();
+  }
+
+  loadCircle() {
+    // console.log(myDiagram.model.nodeDataArray.push('{"text":"End", "figure":"Circle", "fill":"#CE0620", "key":-1, "loc":"-410 -180"}'));
+    console.log(myDiagram.model.toJson());
+    var abc = JSON.parse(this.savedModel.value);
+    console.log(abc.nodeDataArray);
+
+    abc.nodeDataArray.push({ "text": "End", "figure": "Circle", "fill": "#CE0620", "key": -1, "loc": "-1560 -690" });
+    console.log(abc);
+    this.savedModel.value = JSON.stringify(abc);
+    // console.log(this.savedModel.value);
+    this.load();
+  }
+
   groupSelect(value) {
     const $ = go.GraphObject.make;
     myPalette.div = null;

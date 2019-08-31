@@ -1,8 +1,8 @@
 <h1>
     {{title}}
 </h1>
-<div class="dropdown">
 
+<div class="dropdown">
     <select class="form-control" (change)="groupSelect($event.target.value)">
         <option value="" selected disabled hidden>--Select State--</option>
         <option *ngFor="let group of choices"> {{group}}</option>
@@ -17,6 +17,8 @@
 <div>
     <button (click)="save()">Save</button>
     <button (click)="load()">Load</button>
+    <button (click)="loadCircle()">Circle</button>
+    <button (click)="loadDiamond()">Diamond</button>
     Diagram Model saved in JSON format:
 </div>
 <textarea id="mySavedModel" #mySavedModel style="width:100%;height:300px">
