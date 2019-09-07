@@ -38,7 +38,7 @@ export class MinimalComponent implements AfterViewInit {
   ];
 
   choice = this.groupOne;
-
+  count = 500;
   searchWidget(value) {
     console.log(value);
   }
@@ -47,11 +47,16 @@ export class MinimalComponent implements AfterViewInit {
     var abc = JSON.parse(this.savedModel.value);
     console.log(abc.nodeDataArray);
 
-    abc.nodeDataArray.push({"text":"???", "figure":"Diamond", "fill":"lightskyblue", "key":-3, "loc":"-1560 -690"});
+    abc.nodeDataArray.push({"text":"???", "figure":"Diamond", "fill":"lightskyblue", "key":-3, "loc":"-1560 -" + this.count});
     console.log(abc);
     this.savedModel.value = JSON.stringify(abc);
     // console.log(this.savedModel.value);
     this.load();
+
+    this.count = this.count + 100;
+    if (this.count == 1000) {
+      this.count = 500
+    }
   }
 
   loadCircle() {
@@ -399,7 +404,7 @@ export class MinimalComponent implements AfterViewInit {
 
   loadDiagramProperties() {
     // set Diagram.initialPosition, not Diagram.position, to handle initialization side-effects
-    var pos = myDiagram.model.modelData.position;
-    if (pos) myDiagram.initialPosition = go.Point.parse(pos);
+    // var pos = myDiagram.model.modelData.position;
+    // if (pos) myDiagram.initialPosition = go.Point.parse(pos);
   }
 }
